@@ -20,6 +20,12 @@ class Account < ApplicationRecord
       debit_transfers_balance
   end
 
+  def enough_balance_to_transfer?(amount)
+    return unless balance.positive?
+
+    !(balance - amount).negative?
+  end
+
   private
 
   def credit_transfers_balance

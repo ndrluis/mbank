@@ -24,4 +24,44 @@ RSpec.describe Account, type: :model do
       expect(source_account.balance).to eq(900.00)
     end
   end
+
+  describe "#enough_balance_to_transfer?" do
+    let(:account) { Account.create }
+
+    context "when negative balance" do
+      it "returns false" do
+        expect(account.enough_balance_to_transfer?(100)).to be_falsey
+      end
+    end
+
+    context "when positive balance" do
+      it "returns true" do
+        Transaction.create(
+          destination_account: account,
+          source_account: account,
+          amount: 1000.00,
+          kind: :deposit
+        )
+
+        expect(
+          account.enough_balance_to_transfer?(200.00)
+        ).to be_truthy
+      end
+
+      context "with transaction amount greater than balance" do
+        it "returns false" do
+          Transaction.create(
+            destination_account: account,
+            source_account: account,
+            amount: 100.00,
+            kind: :deposit
+          )
+
+          expect(
+            account.enough_balance_to_transfer?(200.00)
+          ).to be_falsey
+        end
+      end
+    end
+  end
 end
