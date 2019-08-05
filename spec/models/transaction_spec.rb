@@ -61,7 +61,7 @@ RSpec.describe Transaction, type: :model do
       end
 
       context 'when transaction kind is deposit' do
-        it 'skips validation' do
+        it 'does not add error message' do
           source_account = Account.create
 
           transaction = Transaction.new(

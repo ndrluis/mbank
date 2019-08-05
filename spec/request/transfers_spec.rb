@@ -30,7 +30,7 @@ RSpec.describe 'Transfers', type: :request do
           expect(response).to have_http_status(:created)
         end
 
-        it 'returns transaction information' do
+        it 'returns transfer data' do
           post '/transfers', params: {
             transfer: {
               source_account_id: source_account.id,
@@ -48,7 +48,7 @@ RSpec.describe 'Transfers', type: :request do
         end
       end
 
-      context 'when source account does not has enough balance' do
+      context 'when source account does not have enough balance' do
         before do
           post '/transfers', params: {
             transfer: {

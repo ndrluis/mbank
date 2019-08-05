@@ -15,7 +15,7 @@ RSpec.describe 'Deposits', type: :request do
         expect(response).to have_http_status(:created)
       end
 
-      it 'returns transaction information' do
+      it 'returns deposit data' do
         post '/deposits', params: {
           deposit: { destination_account_id: account.id, amount: 1000.55 }
         }
@@ -40,7 +40,7 @@ RSpec.describe 'Deposits', type: :request do
         expect(response).to have_http_status(:unprocessable_entity)
       end
 
-      it 'returns transaction information' do
+      it 'returns error message' do
         post '/deposits', params: {
           deposit: { destination_account_id: account.id }
         }

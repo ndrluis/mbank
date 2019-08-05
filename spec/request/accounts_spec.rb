@@ -10,7 +10,7 @@ RSpec.describe 'Accounts', type: :request do
       expect(response).to have_http_status(:created)
     end
 
-    it 'returns account information' do
+    it 'returns account data' do
       post '/accounts'
 
       expect(response_json).to include(
