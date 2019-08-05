@@ -64,4 +64,13 @@ RSpec.describe Account, type: :model do
       end
     end
   end
+
+  describe "#formatted_balance" do
+    it 'returns the balance formatted with reais notation' do
+      account = Account.new
+      allow(account).to receive(:balance).and_return(1500.10)
+
+      expect(account.formatted_balance).to eq("R$ 1.500,10")
+    end
+  end
 end

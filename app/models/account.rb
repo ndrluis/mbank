@@ -26,6 +26,12 @@ class Account < ApplicationRecord
     !(balance - amount).negative?
   end
 
+  def formatted_balance
+    ActiveSupport::NumberHelper.number_to_currency(
+      balance, locale: :'pt-BR'
+    )
+  end
+
   private
 
   def credit_transfers_balance
