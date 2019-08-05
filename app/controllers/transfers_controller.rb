@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TransfersController < ApplicationController
   def create
     transaction = Transaction.new(transaction_params)

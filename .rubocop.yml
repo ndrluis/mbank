@@ -1,0 +1,31 @@
+require: rubocop-rails
+
+AllCops:
+  Exclude:
+    - vendor/**/*
+    - log/**/*
+    - db/schema.rb
+    - bin/*
+    - config/**/*
+    - spec/*_helper.rb
+    - Rakefile
+
+Rails/InverseOf:
+  Exclude:
+    - app/models/account.rb
+
+Metrics/BlockLength:
+  Exclude:
+    - '**/*.rake'
+    - spec/**/*.rb
+
+Metrics/MethodLength:
+  Exclude:
+    - db/migrate/*
+
+Metrics/AbcSize:
+  Exclude:
+    - db/migrate/*
+
+Documentation:
+  Enabled: false

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Accounts
   class BalancesController < ApplicationController
     def show
@@ -8,7 +10,7 @@ module Accounts
           balance: account.formatted_balance
         }, status: :ok
       else
-        render json: { error: "Record Not Found" }, status: :not_found
+        render json: { error: 'Record Not Found' }, status: :not_found
       end
     end
   end
