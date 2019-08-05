@@ -2,4 +2,70 @@ require 'rails_helper'
 
 RSpec.describe Transaction, type: :model do
   it { is_expected.to define_enum_for(:kind).with_values(%w(transfer deposit)) }
+
+  describe "validations" do
+    describe "#enough_balance_to_transfer" do
+      context "when transation kind is transfer" do
+        context "with transfer amount greater than balance" do
+          it "does not add error message" do
+            source_account = Account.create
+            destination_account = Account.create
+
+            transaction = Transaction.create(
+              source_account: source_account,
+              destination_account: source_account,
+              amount: 110.50,
+              kind: :deposit
+            )
+
+            transaction = Transaction.new(
+              source_account: source_account,
+              destination_account: destination_account,
+              amount: 100.50,
+              kind: :transfer
+            )
+
+            transaction.valid?
+
+            expect(transaction.errors).to be_empty
+          end
+        end
+
+        context "with transfer amount lower than balance" do
+          it "adds error message" do
+            source_account = Account.create
+            destination_account = Account.create
+
+            transaction = Transaction.new(
+              source_account: source_account,
+              destination_account: destination_account,
+              amount: 100.50,
+              kind: :transfer
+            )
+
+            transaction.valid?
+
+            expect(transaction.errors.messages).to eq(
+              { source_account: ["doesn't have enough balance to transfer"] }
+            )
+          end
+        end
+
+        context "when transation kind is deposit" do
+          it "skips the validation" do
+            account = Account.create
+
+            transaction = Transaction.new(
+              source_account: account,
+              destination_account: account,
+              amount: 100.50,
+              kind: :deposit
+            )
+
+            expect(transaction).to be_valid
+          end
+        end
+      end
+    end
+  end
 end
