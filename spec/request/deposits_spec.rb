@@ -16,7 +16,9 @@ RSpec.describe 'Deposits', type: :request do
     context 'with valid params' do
       context 'when logged user role is admin' do
         before do
-          auth_headers = Devise::JWT::TestHelpers.auth_headers(headers, admin_user)
+          auth_headers = Devise::JWT::TestHelpers.auth_headers(
+            headers, admin_user
+          )
 
           post '/deposits', params: {
             deposit: {
@@ -43,8 +45,7 @@ RSpec.describe 'Deposits', type: :request do
       context 'when logged user role is client' do
         it 'returns 401 unauthorized' do
           auth_headers = Devise::JWT::TestHelpers.auth_headers(
-            headers,
-            destination_account.user
+            headers, destination_account.user
           )
 
           post '/deposits', params: {
@@ -61,7 +62,9 @@ RSpec.describe 'Deposits', type: :request do
 
     context 'with invalid params' do
       before do
-        auth_headers = Devise::JWT::TestHelpers.auth_headers(headers, admin_user)
+        auth_headers = Devise::JWT::TestHelpers.auth_headers(
+          headers, admin_user
+        )
 
         post '/deposits', params: {
           deposit: { destination_account_id: destination_account.id }

@@ -33,13 +33,7 @@ RSpec.describe 'Accounts Balances', type: :request do
     context 'with valid params' do
       it 'returns the formatted balance' do
         account = create(:account, user: user)
-
-        Transaction.create(
-          source_account: account,
-          destination_account: account,
-          amount: 110.50,
-          kind: :deposit
-        )
+        create(:deposit, destination: account, amount: 110.50)
 
         get "/accounts/#{account.id}/balance", headers: headers
 

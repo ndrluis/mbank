@@ -8,18 +8,13 @@ RSpec.describe Account, type: :model do
       source_account = create(:account)
       destination_account = create(:account)
 
-      Transaction.create(
-        destination_account: source_account,
-        source_account: source_account,
-        amount: 1000.00,
-        kind: :deposit
-      )
+      create(:deposit, destination: source_account, amount: 1000.00)
 
-      Transaction.create(
+      create(
+        :transfer,
         source_account: source_account,
         destination_account: destination_account,
-        amount: 100.00,
-        kind: :transfer
+        amount: 100.00
       )
 
       expect(destination_account.balance).to eq(100.00)
@@ -38,12 +33,7 @@ RSpec.describe Account, type: :model do
 
     context 'when positive balance' do
       it 'returns true' do
-        Transaction.create(
-          destination_account: account,
-          source_account: account,
-          amount: 1000.00,
-          kind: :deposit
-        )
+        create(:deposit, destination: account, amount: 1000.00)
 
         expect(
           account.enough_balance_to_transfer?(200.00)
@@ -52,12 +42,7 @@ RSpec.describe Account, type: :model do
 
       context 'with transaction amount greater than balance' do
         it 'returns false' do
-          Transaction.create(
-            destination_account: account,
-            source_account: account,
-            amount: 100.00,
-            kind: :deposit
-          )
+          create(:deposit, destination: account, amount: 100.00)
 
           expect(
             account.enough_balance_to_transfer?(200.00)

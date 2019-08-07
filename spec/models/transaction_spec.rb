@@ -11,19 +11,10 @@ RSpec.describe Transaction, type: :model do
         context 'when source and destination account is the same' do
           it 'adds error message' do
             account = create(:account)
+            create(:deposit, destination: account)
 
-            Transaction.create(
-              source_account: account,
-              destination_account: account,
-              amount: 110.50,
-              kind: :deposit
-            )
-
-            transaction = Transaction.new(
-              source_account: account,
-              destination_account: account,
-              amount: 110.50,
-              kind: :transfer
+            transaction = build(
+              :transfer, source_account: account, destination_account: account
             )
 
             transaction.valid?
@@ -39,18 +30,12 @@ RSpec.describe Transaction, type: :model do
             source_account = create(:account)
             destination_account = create(:account)
 
-            Transaction.create(
-              source_account: source_account,
-              destination_account: source_account,
-              amount: 110.50,
-              kind: :deposit
-            )
+            create(:deposit, destination: source_account)
 
-            transaction = Transaction.new(
+            transaction = build(
+              :transfer,
               source_account: source_account,
-              destination_account: destination_account,
-              amount: 110.50,
-              kind: :transfer
+              destination_account: destination_account
             )
 
             transaction.valid?
@@ -62,14 +47,8 @@ RSpec.describe Transaction, type: :model do
 
       context 'when transaction kind is deposit' do
         it 'does not add error message' do
-          source_account = create(:account)
-
-          transaction = Transaction.new(
-            source_account: source_account,
-            destination_account: source_account,
-            amount: 110.50,
-            kind: :deposit
-          )
+          account = create(:account)
+          transaction = build(:deposit, destination: account)
 
           transaction.valid?
 
@@ -85,18 +64,12 @@ RSpec.describe Transaction, type: :model do
             source_account = create(:account)
             destination_account = create(:account)
 
-            Transaction.create(
-              source_account: source_account,
-              destination_account: source_account,
-              amount: 110.50,
-              kind: :deposit
-            )
+            create(:deposit, destination: source_account)
 
-            transaction = Transaction.new(
+            transaction = build(
+              :transfer,
               source_account: source_account,
-              destination_account: destination_account,
-              amount: 100.50,
-              kind: :transfer
+              destination_account: destination_account
             )
 
             transaction.valid?
@@ -110,11 +83,10 @@ RSpec.describe Transaction, type: :model do
             source_account = create(:account)
             destination_account = create(:account)
 
-            transaction = Transaction.new(
+            transaction = build(
+              :transfer,
               source_account: source_account,
-              destination_account: destination_account,
-              amount: 100.50,
-              kind: :transfer
+              destination_account: destination_account
             )
 
             transaction.valid?
@@ -128,13 +100,7 @@ RSpec.describe Transaction, type: :model do
         context 'when transation kind is deposit' do
           it 'skips the validation' do
             account = create(:account)
-
-            transaction = Transaction.new(
-              source_account: account,
-              destination_account: account,
-              amount: 100.50,
-              kind: :deposit
-            )
+            transaction = build(:deposit, destination: account)
 
             expect(transaction).to be_valid
           end

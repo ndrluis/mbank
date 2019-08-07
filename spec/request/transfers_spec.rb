@@ -18,12 +18,7 @@ RSpec.describe 'Transfers', type: :request do
     context 'with valid params' do
       context 'when source account has positive balance' do
         before do
-          Transaction.create(
-            destination_account: source_account,
-            source_account: source_account,
-            amount: 1000.00,
-            kind: :deposit
-          )
+          create(:deposit, destination: source_account)
 
           post '/transfers', params: {
             transfer: {
