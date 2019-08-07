@@ -6,4 +6,6 @@ class User < ApplicationRecord
          jwt_revocation_strategy: Devise::JWT::RevocationStrategies::Null
 
   has_many :accounts, dependent: :destroy
+
+  enum role: { client: 0, admin: 1 }
 end
