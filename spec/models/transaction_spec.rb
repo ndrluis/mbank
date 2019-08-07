@@ -10,7 +10,8 @@ RSpec.describe Transaction, type: :model do
       context 'when transaction kind is transfer' do
         context 'when source and destination account is the same' do
           it 'adds error message' do
-            account = Account.create
+            user = User.create(email: 'foo@bar', password: '123456')
+            account = Account.create(user: user)
 
             Transaction.create(
               source_account: account,
@@ -36,8 +37,10 @@ RSpec.describe Transaction, type: :model do
 
         context 'when source and destination account is different' do
           it 'does not add error message' do
-            source_account = Account.create
-            destination_account = Account.create
+            source_user = User.create(email: 'foo@bar', password: '123456')
+            destination_user = User.create(email: 'foo@bar', password: '123456')
+            source_account = Account.create(user: source_user)
+            destination_account = Account.create(user: destination_user)
 
             Transaction.create(
               source_account: source_account,
@@ -62,7 +65,8 @@ RSpec.describe Transaction, type: :model do
 
       context 'when transaction kind is deposit' do
         it 'does not add error message' do
-          source_account = Account.create
+          source_user = User.create(email: 'foo@bar', password: '123456')
+          source_account = Account.create(user: source_user)
 
           transaction = Transaction.new(
             source_account: source_account,
@@ -82,8 +86,10 @@ RSpec.describe Transaction, type: :model do
       context 'when transation kind is transfer' do
         context 'with transfer amount greater than balance' do
           it 'does not add error message' do
-            source_account = Account.create
-            destination_account = Account.create
+            source_user = User.create(email: 'foo@bar', password: '123456')
+            destination_user = User.create(email: 'foo@bar', password: '123456')
+            source_account = Account.create(user: source_user)
+            destination_account = Account.create(user: destination_user)
 
             Transaction.create(
               source_account: source_account,
@@ -107,8 +113,10 @@ RSpec.describe Transaction, type: :model do
 
         context 'with transfer amount lower than balance' do
           it 'adds error message' do
-            source_account = Account.create
-            destination_account = Account.create
+            source_user = User.create(email: 'foo@bar', password: '123456')
+            destination_user = User.create(email: 'foo@bar', password: '123456')
+            source_account = Account.create(user: source_user)
+            destination_account = Account.create(user: destination_user)
 
             transaction = Transaction.new(
               source_account: source_account,
@@ -127,7 +135,8 @@ RSpec.describe Transaction, type: :model do
 
         context 'when transation kind is deposit' do
           it 'skips the validation' do
-            account = Account.create
+            user = User.create(email: 'foo@bar', password: '123456')
+            account = Account.create(user: user)
 
             transaction = Transaction.new(
               source_account: account,

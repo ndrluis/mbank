@@ -1,13 +1,16 @@
 # frozen_string_literal: true
 
 class TransfersController < ApplicationController
+  before_action :authenticate_user!
+
   def create
+    current_user.accounts.find(transfer_params[:source_account_id])
     transaction = Transaction.new(transaction_params)
 
     if transaction.save
       render json: transaction, status: :created
     else
-      render json: transaction.errors, status: :unprocessable_entity
+      render_errors(transaction.errors)
     end
   end
 

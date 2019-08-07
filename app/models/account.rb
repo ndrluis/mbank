@@ -16,6 +16,8 @@ class Account < ApplicationRecord
            foreign_key: 'source_account_id',
            class_name: 'Transaction'
 
+  belongs_to :user
+
   def balance
     deposits_balance +
       credit_transfers_balance -
