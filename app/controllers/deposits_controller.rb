@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class DepositsController < ApplicationController
+  before_action :authenticate_user!, :verify_role!
+
   def create
     transaction = Transaction.new(transaction_params)
 
@@ -12,6 +14,10 @@ class DepositsController < ApplicationController
   end
 
   private
+
+  def verify_role!
+    head :unauthorized if current_user.client?
+  end
 
   def transaction_params
     deposit_params.merge(
