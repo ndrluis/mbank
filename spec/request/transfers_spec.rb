@@ -4,23 +4,15 @@ require 'rails_helper'
 
 RSpec.describe 'Transfers', type: :request do
   describe 'POST /transfers' do
-    let(:source_user) do
-      User.create(email: 'foo@bar', password: '123456')
-    end
-
-    let(:source_account) { Account.create(user: source_user) }
-
-    let(:destination_account) do
-      user = User.create(email: 'foo2@bar', password: '123456')
-      Account.create(user: user)
-    end
+    let(:source_account) { create(:account) }
+    let(:destination_account) { create(:account) }
 
     let(:headers) do
-      { 'Accept' => 'application/json', 'Content-Type' => 'application/json' }
-    end
+      headers = {
+        'Accept' => 'application/json', 'Content-Type' => 'application/json'
+      }
 
-    let(:auth_headers) do
-      Devise::JWT::TestHelpers.auth_headers(headers, source_user)
+      Devise::JWT::TestHelpers.auth_headers(headers, source_account.user)
     end
 
     context 'with valid params' do
@@ -39,7 +31,7 @@ RSpec.describe 'Transfers', type: :request do
               destination_account_id: destination_account.id,
               amount: 100
             }
-          }.to_json, headers: auth_headers
+          }.to_json, headers: headers
         end
 
         it 'returns 201 created' do
@@ -64,7 +56,7 @@ RSpec.describe 'Transfers', type: :request do
               destination_account_id: destination_account.id,
               amount: 100
             }
-          }.to_json, headers: auth_headers
+          }.to_json, headers: headers
         end
 
         it 'returns 404 not found' do
@@ -86,7 +78,7 @@ RSpec.describe 'Transfers', type: :request do
               destination_account_id: destination_account.id,
               amount: 100
             }
-          }.to_json, headers: auth_headers
+          }.to_json, headers: headers
         end
 
         it 'returns 422 unprocessable entity' do
@@ -108,7 +100,7 @@ RSpec.describe 'Transfers', type: :request do
             source_account_id: source_account.id,
             destination_account_id: destination_account.id
           }
-        }.to_json, headers: auth_headers
+        }.to_json, headers: headers
       end
 
       it 'returns 422 unprocessable entity' do

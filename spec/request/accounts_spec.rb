@@ -3,9 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Accounts', type: :request do
-  let(:user) do
-    User.create(email: 'foo@bar', password: '123456')
-  end
+  let(:user) { create(:user) }
 
   let(:headers) do
     headers = {

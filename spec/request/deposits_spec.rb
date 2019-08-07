@@ -4,10 +4,7 @@ require 'rails_helper'
 
 RSpec.describe 'Deposits', type: :request do
   describe 'POST /deposits' do
-    let(:account) do
-      user = User.create(email: 'foo@bar', password: '12345678')
-      Account.create(user: user)
-    end
+    let(:account) { create(:account) }
 
     context 'with valid params' do
       it 'returns 201 created' do

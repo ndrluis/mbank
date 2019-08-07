@@ -5,10 +5,8 @@ require 'rails_helper'
 RSpec.describe Account, type: :model do
   describe '#balance' do
     it 'returns the sum of the account transactions' do
-      source_user = User.create(email: 'foo@bar', password: '123456')
-      destination_user = User.create(email: 'foo@bar', password: '123456')
-      source_account = Account.create(user: source_user)
-      destination_account = Account.create(user: destination_user)
+      source_account = create(:account)
+      destination_account = create(:account)
 
       Transaction.create(
         destination_account: source_account,
@@ -30,10 +28,7 @@ RSpec.describe Account, type: :model do
   end
 
   describe '#enough_balance_to_transfer?' do
-    let(:account) do
-      user = User.create(email: 'foo@bar', password: '123456')
-      Account.create(user: user)
-    end
+    let(:account) { create(:account) }
 
     context 'when negative balance' do
       it 'returns false' do
@@ -74,8 +69,7 @@ RSpec.describe Account, type: :model do
 
   describe '#formatted_balance' do
     it 'returns the balance formatted with reais notation' do
-      user = User.create(email: 'foo@bar', password: '123456')
-      account = Account.new(user: user)
+      account = build_stubbed(:account)
       allow(account).to receive(:balance).and_return(1500.10)
 
       expect(account.formatted_balance).to eq('R$ 1.500,10')
