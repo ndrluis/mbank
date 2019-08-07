@@ -76,7 +76,7 @@ RSpec.describe 'Deposits', type: :request do
       end
 
       it 'returns error message' do
-        expect(response_json).to match(
+        expect(response_json['errors']).to match(
           'amount' => ["can't be blank"]
         )
       end

@@ -9,7 +9,7 @@ class DepositsController < ApplicationController
     if transaction.save
       render json: transaction, status: :created
     else
-      render json: transaction.errors, status: :unprocessable_entity
+      render_errors(transaction.errors)
     end
   end
 
