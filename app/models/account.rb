@@ -18,6 +18,18 @@ class Account < ApplicationRecord
 
   belongs_to :user
 
+  def statements
+    current_balance = 0
+
+    transactions.map do |transaction|
+      amount = transaction.amount
+      amount = -amount if transaction.debit_for?(self)
+      current_balance += amount
+
+      build_statement(amount, transaction, current_balance)
+    end
+  end
+
   def balance
     deposits_balance +
       credit_transfers_balance -
@@ -37,6 +49,22 @@ class Account < ApplicationRecord
   end
 
   private
+
+  def build_statement(amount, transaction, current_balance)
+    {
+      amount: amount.to_f,
+      kind: transaction.kind,
+      balance: current_balance.to_f,
+      source: transaction.source_account,
+      destination: transaction.destination_account
+    }
+  end
+
+  def transactions
+    debit_transfers
+      .or(credit_transfers)
+      .or(deposits)
+  end
 
   def credit_transfers_balance
     credit_transfers.sum(:amount)

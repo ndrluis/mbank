@@ -60,4 +60,57 @@ RSpec.describe Account, type: :model do
       expect(account.formatted_balance).to eq('R$ 1.500,10')
     end
   end
+
+  describe '#statements' do
+    it 'returns the account statements' do
+      source_account = create(:account)
+      destination_account = create(:account)
+
+      create(:deposit, destination: destination_account, amount: 100.00)
+
+      create(:transfer,
+             source_account: destination_account,
+             destination_account: source_account, amount: 50)
+
+      create(:deposit, destination: source_account, amount: 300)
+      create(:transfer,
+             source_account: source_account,
+             destination_account: destination_account, amount: 150.50)
+
+      create(:deposit, destination: source_account, amount: 25)
+
+      expect(source_account.statements).to match(
+        [
+          {
+            amount: 50.0,
+            kind: 'transfer',
+            balance: 50.0,
+            source: destination_account,
+            destination: source_account
+          },
+          {
+            amount: 300.0,
+            kind: 'deposit',
+            balance: 350.0,
+            source: source_account,
+            destination: source_account
+          },
+          {
+            amount: -150.50,
+            kind: 'transfer',
+            balance: 199.5,
+            source: source_account,
+            destination: destination_account
+          },
+          {
+            amount: 25.0,
+            kind: 'deposit',
+            balance: 224.5,
+            source: source_account,
+            destination: source_account
+          }
+        ]
+      )
+    end
+  end
 end
