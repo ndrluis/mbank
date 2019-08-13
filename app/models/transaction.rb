@@ -10,6 +10,10 @@ class Transaction < ApplicationRecord
 
   enum kind: %w[transfer deposit]
 
+  def debit_for?(account)
+    source_account == account && transfer?
+  end
+
   private
 
   def transfer_to_destination

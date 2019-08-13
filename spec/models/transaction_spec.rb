@@ -108,4 +108,42 @@ RSpec.describe Transaction, type: :model do
       end
     end
   end
+
+  describe '#debit_for?' do
+    context 'when transaction kind is transfer' do
+      context 'when received account is the source account' do
+        it 'returns true' do
+          account = create(:account)
+          create(:deposit, destination: account)
+          transfer = create(:transfer, source_account: account)
+
+          expect(
+            transfer.debit_for?(account)
+          ).to be(true)
+        end
+
+        context 'when received account is not the source account' do
+          it 'returns false' do
+            account = create(:account)
+            another_account = create(:account)
+            create(:deposit, destination: account)
+            transfer = create(:transfer, source_account: account)
+
+            expect(
+              transfer.debit_for?(another_account)
+            ).to be(false)
+          end
+        end
+      end
+
+      context 'when transaction kind is deposit' do
+        it 'returns false' do
+          account = create(:account)
+          deposit = create(:deposit, destination: account)
+
+          expect(deposit.debit_for?(account)).to be(false)
+        end
+      end
+    end
+  end
 end
