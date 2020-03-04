@@ -9,7 +9,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'devise', '4.6.2'
 gem 'devise-jwt', '~> 0.5.9'
 gem 'pg', '>= 0.18', '< 2.0'
-gem 'puma', '~> 3.11'
+gem 'puma', '~> 3.12'
 gem 'rack-cors'
 gem 'rails', '~> 5.2.3'
 
